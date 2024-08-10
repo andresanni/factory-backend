@@ -3,7 +3,8 @@ import { SupplyCategoryController } from "../controllers/SupplyCategoryControlle
 
 const router = Router();
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/unbound-method
-router.get("/", SupplyCategoryController.getAllSupplyCategories);
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get("/", (req, res) => SupplyCategoryController.getAllSupplyCategories(req, res));
 
 export default router;

@@ -5,6 +5,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import supplyRouter from "./routes/SupplyRoutes";
 import supplyCategoryRouter from "./routes/SupplyCategoryRoutes";
+import 'express-async-errors';
 
 dotenv.config();
 

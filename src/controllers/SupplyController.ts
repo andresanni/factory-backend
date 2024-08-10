@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { SupplyRepository } from "../repository/SupplyRepository";
-
-const supplyRepository = new SupplyRepository();
+import { DataSource } from "typeorm";
 
 export class SupplyController {
-  static async getAllSupplies(req: Request, res: Response): Promise<void> {
+  
+  private supplyRepository : SupplyRepository;
+
+  constructor(dataSource : DataSource){
+    this.supplyRepository = new SupplyRepository(dataSource);
+  }
+  
+  async getAllSupplies(req: Request, res: Response): Promise<void> {
     try {
-      const supplies = await supplyRepository.findAll();
+      const supplies = await this.supplyRepository.findAll();
       res.json(supplies);
     } catch (error) {
       res.status(500).json({ message: "Error fetching supplies", error });
