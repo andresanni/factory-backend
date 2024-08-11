@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 app.use(morgan("dev"));
 
 app.use("/api/supplies", supplyRouter);
-app.use("/api/supplyCategories", supplyCategoryRouter);
+app.use("/api/supplyCategories", supplyCategoryRouter); 
 
 AppDataSource.initialize()
   .then(() => {

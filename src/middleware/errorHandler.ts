@@ -18,4 +18,4 @@ export const errorHandler = (
     res.status(status).json({error: {
         message: message, status:status
     }});
-};
+}; 

@@ -42,7 +42,13 @@ export class SupplyRepository implements ICrudRepository<Supply> {
   }
 
   async create(supply: Supply): Promise<Supply> {
-    return this.repository.save(supply);
+    try{
+      return this.repository.save(supply);
+    }
+    catch(error){
+      const parsedError = parseError(error);
+      throw new Error(`Error saving supply : ${parsedError.message}`);
+    }
   }
 
   async delete(id: number): Promise<boolean> {
