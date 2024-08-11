@@ -8,7 +8,7 @@ const supplyCategoryController = new SupplyCategoryController(AppDataSource);
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get("/", async (req: Request, res: Response) => {
-  await supplyCategoryController.getAllSupplies(req, res);
+  await supplyCategoryController.getAll(req, res);
 });
 
 export default router;
