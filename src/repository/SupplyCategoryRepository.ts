@@ -2,6 +2,7 @@ import { DataSource, Repository, UpdateResult, DeleteResult } from "typeorm";
 import { SupplyCategory } from "../entity/SupplyCategory";
 import { ICrudRepository } from "./ICrudRepository";
 import { parseError } from "./utils";
+import { RepositoryError } from "../errors/RepositoryErrors";
 
 
 export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory> {
@@ -16,7 +17,11 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       return this.repository.find({ relations: ["supplies"] });
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error fetching supply categories: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error fecthing supply categories",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -25,7 +30,11 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       return this.repository.findOneBy({ id });
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error fetching supply category: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error fecthing supply category",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -38,7 +47,11 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       return null;
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error updating supply category: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error updating supply category",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -48,7 +61,11 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
     }
     catch(error){
       const parsedError = parseError(error);
-      throw new Error(`Error saving supply category: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error creating supply category",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -62,7 +79,11 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       );
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error deleting supply category: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error deleting supply category",
+        500,
+        parsedError.message
+      );
     }
   }
 }

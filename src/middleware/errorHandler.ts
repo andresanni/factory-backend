@@ -1,21 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-
-interface CustomError extends Error {
-  status?: number;
-}
+import { RepositoryError } from "../errors/RepositoryErrors";
 
 export const errorHandler = (
-  err: CustomError,
+  error: Error,
   req: Request,
   res: Response,
-  _next: NextFunction
+  next: NextFunction
 ): void => {
-    console.log(err.stack);
 
-    const status = err.status || 500;
-    const message = err.message || "Something went wrong";
+  if (error instanceof RepositoryError) {
+    console.error(`Repository error: ${error.internalDetails}`);
+    res.status(error.statusCode).json({
+      error: error.message,
+    });
+  }
 
-    res.status(status).json({error: {
-        message: message, status:status
-    }});
-}; 
+  console.error(error);
+  res.status(500).json({error: "An unexpected error occurred"});
+  next();
+};

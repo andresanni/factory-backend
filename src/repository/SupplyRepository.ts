@@ -1,6 +1,7 @@
 import { Supply } from "../entity/Supply";
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 import { ICrudRepository } from "./ICrudRepository";
+import { RepositoryError } from "../errors/RepositoryErrors";
 import { parseError } from "./utils";
 
 export class SupplyRepository implements ICrudRepository<Supply> {
@@ -15,7 +16,11 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       return this.repository.find({ relations: ["category"] });
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error fetching supplies: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error fecthing supplies",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -24,7 +29,11 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       return this.repository.findOneBy({ id });
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error fetching supply: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error fecthing supply",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -37,17 +46,24 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       return null;
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error updating supply: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error updating supplies",
+        500,
+        parsedError.message
+      );
     }
   }
 
   async create(supply: Supply): Promise<Supply> {
-    try{
+    try {
       return this.repository.save(supply);
-    }
-    catch(error){
+    } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error saving supply : ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error creating supply",
+        500,
+        parsedError.message
+      );
     }
   }
 
@@ -61,7 +77,11 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       );
     } catch (error) {
       const parsedError = parseError(error);
-      throw new Error(`Error deleting supply: ${parsedError.message}`);
+      throw new RepositoryError(
+        "Error deleting supply",
+        500,
+        parsedError.message
+      );
     }
   }
 }
