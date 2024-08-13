@@ -2,9 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import "reflect-metadata";
-import { AppDataSource } from "./data-source";
+import { appDataSource } from "./data-source";
 import supplyRouter from "./routes/SupplyRoutes";
 import supplyCategoryRouter from "./routes/SupplyCategoryRoutes";
+import { errorHandler } from "./middleware/errorHandler";
 import 'express-async-errors';
 
 dotenv.config();
@@ -17,7 +18,9 @@ app.use(morgan("dev"));
 app.use("/api/supplies", supplyRouter);
 app.use("/api/supplyCategories", supplyCategoryRouter); 
 
-AppDataSource.initialize()
+app.use(errorHandler);
+
+appDataSource.initialize()
   .then(() => {
     console.log("Connnected to database");
     app.listen(PORT, () => {

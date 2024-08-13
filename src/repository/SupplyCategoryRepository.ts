@@ -4,7 +4,6 @@ import { ICrudRepository } from "./ICrudRepository";
 import { parseError } from "./utils";
 import { RepositoryError } from "../errors/RepositoryErrors";
 
-
 export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory> {
   private repository: Repository<SupplyCategory>;
 
@@ -55,14 +54,14 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
     }
   }
 
-  async create(supplyCategory: SupplyCategory): Promise<SupplyCategory> {
+  async save(supplyCategory: SupplyCategory): Promise<SupplyCategory> {
     try{
       return this.repository.save(supplyCategory);
     }
     catch(error){
       const parsedError = parseError(error);
       throw new RepositoryError(
-        "Error creating supply category",
+        "Error saving supply category",
         500,
         parsedError.message
       );

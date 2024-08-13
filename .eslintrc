@@ -26,5 +26,17 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
-  }
+  },
+  "overrides": [
+    {
+      "parserOptions": {
+        "project": "./tsconfig.test.json"
+      },
+      "files": ["**/*.test.ts", "src/repository/__tests__/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
+      }
+    }
+  ]
 }

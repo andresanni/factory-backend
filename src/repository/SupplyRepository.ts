@@ -2,7 +2,6 @@ import { Supply } from "../entity/Supply";
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 import { ICrudRepository } from "./ICrudRepository";
 import { RepositoryError } from "../errors/RepositoryErrors";
-import { parseError } from "./utils";
 
 export class SupplyRepository implements ICrudRepository<Supply> {
   private repository: Repository<Supply>;
@@ -13,26 +12,24 @@ export class SupplyRepository implements ICrudRepository<Supply> {
 
   async findAll(): Promise<Supply[]> {
     try {
-      return this.repository.find({ relations: ["category"] });
+      return await this.repository.find({ relations: ["category"] });
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error fecthing supplies",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
 
   async findById(id: number): Promise<Supply | null> {
     try {
-      return this.repository.findOneBy({ id });
+      return await this.repository.findOneBy({ id });
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error fecthing supply",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -45,24 +42,22 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       }
       return null;
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
-        "Error updating supplies",
+        "Error updating supply",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
 
-  async create(supply: Supply): Promise<Supply> {
+  async save(supply: Supply): Promise<Supply> {
     try {
-      return this.repository.save(supply);
+      return await this.repository.save(supply);
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
-        "Error creating supply",
+        "Error saving supply",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -76,11 +71,10 @@ export class SupplyRepository implements ICrudRepository<Supply> {
         result.affected > 0
       );
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error deleting supply",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }

@@ -4,11 +4,15 @@ import { Supply } from "./Supply";
 @Entity("supply_category")
 export class SupplyCategory {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   name: string;
 
   @OneToMany(() => Supply, (supply) => supply.category)
-  supplies: Supply[];
+  supplies?: Supply[];
+
+  constructor(name:string){
+    this.name = name;
+  }
 }

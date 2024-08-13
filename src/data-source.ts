@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
+export const appDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
@@ -13,4 +13,12 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: ["src/entity/**/*.ts"],
+});
+
+export const testDataSource = new DataSource({
+  type:"sqlite",
+  database: ":memory:",
+  entities: ["src/entity/**/*.ts"],
+  synchronize: true,
+  logging:false
 });
