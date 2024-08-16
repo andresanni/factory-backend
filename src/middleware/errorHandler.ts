@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { RepositoryError } from "../errors/RepositoryErrors";
+import { RepositoryError } from "../errors/RepositoryError";
 
 export const errorHandler = (
   error: Error,
@@ -9,9 +9,9 @@ export const errorHandler = (
 ): void => {
 
   if (error instanceof RepositoryError) {
-    console.error(`Repository error: ${error.internalDetails}`);
+    console.error(`== Repository error: ${error.internalDetails} ==`);
     res.status(error.statusCode).json({
-      error: error.message,
+      error: error.responseMessage,
     });
   }
 

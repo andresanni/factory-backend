@@ -1,7 +1,7 @@
 import { SupplyRepository } from "../SupplyRepository";
 import { testDataSource } from "../../data-source";
 import { Supply } from "../../entity/Supply";
-import { RepositoryError } from "../../errors/RepositoryErrors";
+import { RepositoryError } from "../../errors/RepositoryError";
 import { SupplyCategory } from "../../entity/SupplyCategory";
 
 describe("SupplyRepository", () => {
@@ -96,36 +96,73 @@ describe("SupplyRepository", () => {
   });
 
   describe("update", () => {
-    it("should update a valid supply", async()=>{
+    it("should update a valid supply", async () => {
       const modifiedSupply1 = new Supply("Test Supply 1", category2);
       await repository.update(1, modifiedSupply1);
-      const updatedSupply1 = await testDataSource.getRepository(Supply).findOneBy({id:1});
-      expect(updatedSupply1).toEqual({...modifiedSupply1, id:1});
+      const updatedSupply1 = await testDataSource
+        .getRepository(Supply)
+        .findOneBy({ id: 1 });
+      expect(updatedSupply1).toEqual({ ...modifiedSupply1, id: 1 });
     });
 
-    it("should return when updating a non-existing supply", async() => {
+    it("should return null when updating a non-existing supply", async () => {
       const modifiedSupply1 = new Supply("Test Supply 1", category2);
       const result = await repository.update(3, modifiedSupply1);
       expect(result).toBeNull();
     });
-
   });
 
-  describe("delete", ()=>{
-    it("should delete supply with valid id",async()=>{
-      
+  describe("delete", () => {
+    it("should delete supply with valid id", async () => {
       const lengthBefore = (await testDataSource.getRepository(Supply).find())
-      .length;
+        .length;
       const result = await repository.delete(1);
       const lengthAfter = (await testDataSource.getRepository(Supply).find())
-      .length;
+        .length;
 
       expect(result).toBe(true);
       expect(lengthAfter).toBe(lengthBefore - 1);
     });
-    it("should return false with non-existing supply id", async() => {
+    it("should return false with non-existing supply id", async () => {
       const result = await repository.delete(9);
       expect(result).toBe(false);
-    }); 
+    });
+  });
+
+  describe("Error Handling", () => {
+    it("should throw a RepositoryError with correct attributes when save fails", async () => {
+      const invalidSupply = {
+        name: "Invalid Supply",
+        category: "Invalid Category",
+      };
+
+      try {
+        await repository.save(invalidSupply as any);
+      } catch (error) {
+        expect(error).toBeInstanceOf(RepositoryError);
+        if (error instanceof RepositoryError) {
+          expect(error.internalDetails).toBe(
+            "SQLITE_CONSTRAINT: FOREIGN KEY constraint failed"
+          );
+          expect(error.statusCode).toBe(500);
+          expect(error.responseMessage).toBe("Error saving supply");
+        }
+      }
+    });
+
+    it("should throw a RepositoryError with correct attributes when find fails", async () => {
+      await testDataSource.query("DROP TABLE supply;");
+
+      try {
+        await repository.findAll();
+      } catch (error) {
+        expect(error).toBeInstanceOf(RepositoryError);
+        if (error instanceof RepositoryError) {
+          expect(error.responseMessage).toBe("Error fetching supplies");
+          expect(error.statusCode).toBe(500);
+          expect(error.internalDetails).toContain("SQLITE_ERROR");
+        }
+      }
+    });
   });
 });

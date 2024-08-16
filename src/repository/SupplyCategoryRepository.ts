@@ -1,8 +1,7 @@
 import { DataSource, Repository, UpdateResult, DeleteResult } from "typeorm";
 import { SupplyCategory } from "../entity/SupplyCategory";
 import { ICrudRepository } from "./ICrudRepository";
-import { parseError } from "./utils";
-import { RepositoryError } from "../errors/RepositoryErrors";
+import { RepositoryError } from "../errors/RepositoryError";
 
 export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory> {
   private repository: Repository<SupplyCategory>;
@@ -15,11 +14,10 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
     try {
       return this.repository.find({ relations: ["supplies"] });
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error fecthing supply categories",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -28,11 +26,10 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
     try {
       return this.repository.findOneBy({ id });
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error fecthing supply category",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -45,11 +42,10 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       }
       return null;
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error updating supply category",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -59,11 +55,10 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
       return this.repository.save(supplyCategory);
     }
     catch(error){
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error saving supply category",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
@@ -77,11 +72,10 @@ export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory>
         result.affected > 0
       );
     } catch (error) {
-      const parsedError = parseError(error);
       throw new RepositoryError(
         "Error deleting supply category",
         500,
-        parsedError.message
+        error instanceof Error ? error.message : "Unknown error"
       );
     }
   }
