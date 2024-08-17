@@ -1,8 +1,8 @@
 import { ICrudService } from "./ICrudService";
-import { Supply } from "../entity/Supply";
-import { RepositoryError } from "../errors/RepositoryError";
-import { SupplyRepository } from "../repository/SupplyRepository";
-import { ErrorSource, ServiceError } from "../errors/ServiceError";
+import { Supply } from "../business/entity/Supply";
+import { RepositoryError } from "../business/errors/RepositoryError";
+import { SupplyRepository } from "../business/repository/SupplyRepository";
+import { ErrorSource, ServiceError } from "../business/errors/ServiceError";
 import StatusCode from "status-code-enum";
 
 export class SupplyService implements ICrudService<Supply> {

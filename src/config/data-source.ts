@@ -12,13 +12,20 @@ export const appDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: ["src/entity/**/*.ts"],
+  entities: ["src/business/entities/**/*.ts"],
+});
+
+export const authDataSource = new DataSource({
+  type: "sqlite",
+  database:"./database.sqlite",
+  entities:["src/auth/entities/**/*.ts"],
+  synchronize: true
 });
 
 export const testDataSource = new DataSource({
   type:"sqlite",
   database: ":memory:",
-  entities: ["src/entity/**/*.ts"],
+  entities: ["src/business/entities/**/*.ts"],
   synchronize: true,
   logging:false
 });

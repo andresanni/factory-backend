@@ -1,5 +1,5 @@
 import { DataSource, Repository, UpdateResult, DeleteResult } from "typeorm";
-import { SupplyCategory } from "../entity/SupplyCategory";
+import { SupplyCategory } from "../entities/SupplyCategory";
 import { ICrudRepository } from "./ICrudRepository";
 import { RepositoryError } from "../errors/RepositoryError";
 

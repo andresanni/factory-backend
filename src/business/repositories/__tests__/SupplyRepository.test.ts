@@ -1,8 +1,8 @@
 import { SupplyRepository } from "../SupplyRepository";
-import { testDataSource } from "../../data-source";
-import { Supply } from "../../entity/Supply";
+import { testDataSource } from "../../../config/data-source";
+import { Supply } from "../../entities/Supply";
 import { RepositoryError } from "../../errors/RepositoryError";
-import { SupplyCategory } from "../../entity/SupplyCategory";
+import { SupplyCategory } from "../../entities/SupplyCategory";
 
 describe("SupplyRepository", () => {
   let repository: SupplyRepository;

@@ -1,4 +1,4 @@
-import { Supply } from "../entity/Supply";
+import { Supply } from "../entities/Supply";
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 import { ICrudRepository } from "./ICrudRepository";
 import { RepositoryError } from "../errors/RepositoryError";

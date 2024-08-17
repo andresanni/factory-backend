@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { SupplyController } from "../controllers/SupplyController";
-import { appDataSource } from "../data-source";
+import { appDataSource } from "../../config/data-source";
 
 const router = Router();
 

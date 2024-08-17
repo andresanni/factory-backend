@@ -1,4 +1,4 @@
-import { RepositoryError } from "../errors/RepositoryError";
+import { RepositoryError } from "../business/errors/RepositoryError";
 
 export interface ICrudService<T> {
   findAll(): Promise<T[]>;

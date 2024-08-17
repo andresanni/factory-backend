@@ -1,23 +1,20 @@
 import { Request, Response } from "express";
-import { SupplyCategoryRepository } from "../repository/SupplyCategoryRepository";
+import { SupplyRepository } from "../repositories/SupplyRepository";
 import { DataSource } from "typeorm";
 import { ICrudController } from "./ICrudController";
 
-export class SupplyCategoryController implements ICrudController {
-  private supplyCategoryRepository: SupplyCategoryRepository;
+export class SupplyController implements ICrudController {
+  private supplyRepository: SupplyRepository;
 
   constructor(dataSource: DataSource) {
-    this.supplyCategoryRepository = new SupplyCategoryRepository(dataSource);
+    this.supplyRepository = new SupplyRepository(dataSource);
   }
-
   async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const supplyCategories = await this.supplyCategoryRepository.findAll();
-      res.json(supplyCategories);
+      const supplies = await this.supplyRepository.findAll();
+      res.json(supplies);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error fetching supply categories", error });
+      res.status(500).json({ message: "Error fetching supplies", error });
     }
   }
   //TODO
