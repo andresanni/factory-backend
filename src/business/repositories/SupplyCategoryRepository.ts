@@ -1,7 +1,7 @@
 import { DataSource, Repository, UpdateResult, DeleteResult } from "typeorm";
 import { SupplyCategory } from "../entities/SupplyCategory";
 import { ICrudRepository } from "./ICrudRepository";
-import { RepositoryError } from "../errors/RepositoryError";
+import { RepositoryError } from "../../errors/RepositoryError";
 
 export class SupplyCategoryRepository implements ICrudRepository<SupplyCategory> {
   private repository: Repository<SupplyCategory>;

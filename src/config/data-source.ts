@@ -22,6 +22,13 @@ export const authDataSource = new DataSource({
   synchronize: true
 });
 
+export const authTestDataSource = new DataSource({
+  type: "sqlite",
+  database:":memory:",
+  entities:["src/auth/entities/**/*.ts"],
+  synchronize: true
+});
+
 export const testDataSource = new DataSource({
   type:"sqlite",
   database: ":memory:",

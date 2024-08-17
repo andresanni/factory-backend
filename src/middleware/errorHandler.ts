@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { RepositoryError } from "../business/errors/RepositoryError";
+import { RepositoryError } from "../errors/RepositoryError";
 
 export const errorHandler = (
   error: Error,

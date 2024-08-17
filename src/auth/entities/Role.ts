@@ -17,4 +17,8 @@ export class Role{
     @ManyToMany(()=> Permission, (permission)=> permission.roles)
     @JoinTable({name: "role_permissions"})
     permissions: Permission[];
+
+    constructor(name:string){
+        this.name = name;
+    }
 }

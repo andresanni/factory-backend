@@ -16,11 +16,21 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  name: string;
+  name?: string;
 
   @Column({ nullable: true })
-  surname: string;
+  surname?: string;
 
   @ManyToOne(() => Role, (role) => role.users)
-  role: Role;
+  role?: Role | null;
+
+  
+  constructor(username: string, passwordHash: string, email: string, name?: string, surname?: string, role?: Role) {
+     this.username = username;
+     this.passwordHash = passwordHash;
+     this.email = email;
+     this.name = name ;
+     this.surname = surname ;
+     this.role = role;
+  }
 }

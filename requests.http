@@ -2,3 +2,13 @@ GET http://localhost:3000/api/supplies
 ###
 GET http://localhost:3000/api/supplyCategories
 
+###
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "username":"andres.anni3",
+    "password": "123456",
+    "email": "andres.anni3@gmail.com"
+
+}

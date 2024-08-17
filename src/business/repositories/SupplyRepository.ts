@@ -1,7 +1,7 @@
 import { Supply } from "../entities/Supply";
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 import { ICrudRepository } from "./ICrudRepository";
-import { RepositoryError } from "../errors/RepositoryError";
+import { handleError } from "../../utils/respositoryUtils";
 
 export class SupplyRepository implements ICrudRepository<Supply> {
   private repository: Repository<Supply>;
@@ -10,20 +10,12 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     this.repository = dataSource.getRepository(Supply);
   }
 
-  private handleError(operation: string, error: unknown): never {
-    console.error(`Error in SupplyRepository\nOperation: ${operation}\nDetails: \n `, error);
-    throw new RepositoryError(
-      `Error ${operation}`,
-      500,
-      error instanceof Error ? error.message : "Unknown error"
-    );
-  }
 
   async findAll(): Promise<Supply[]> {
     try {
       return await this.repository.find({ relations: ["category"] });
     } catch (error) {
-      this.handleError("fetching supplies", error);
+      handleError("fetching supplies", error, this.constructor.name);
     }
   }
 
@@ -31,7 +23,7 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     try {
       return await this.repository.findOneBy({ id });
     } catch (error) {
-      this.handleError("fetching supply", error);
+      handleError("fetching supply", error, this.constructor.name);
     }
   }
 
@@ -40,7 +32,7 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       const result: UpdateResult = await this.repository.update(id, item);
       return result.affected ? await this.findById(id) : null;
     } catch (error) {
-      this.handleError("updating supply", error);
+      handleError("updating supply", error, this.constructor.name);
     }
   }
 
@@ -48,7 +40,7 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     try {
       return await this.repository.save(supply);
     } catch (error) {
-      this.handleError("saving supply", error);
+      handleError("saving supply", error, this.constructor.name);
     }
   }
 
@@ -61,7 +53,7 @@ export class SupplyRepository implements ICrudRepository<Supply> {
         result.affected > 0
       );
     } catch (error) {
-      this.handleError("deleting supply", error);
+      handleError("deleting supply", error, this.constructor.name);
     }
   }
 }

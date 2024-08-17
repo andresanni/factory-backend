@@ -1,7 +1,7 @@
 import { SupplyRepository } from "../SupplyRepository";
 import { testDataSource } from "../../../config/data-source";
 import { Supply } from "../../entities/Supply";
-import { RepositoryError } from "../../errors/RepositoryError";
+import { RepositoryError } from "../../../errors/RepositoryError";
 import { SupplyCategory } from "../../entities/SupplyCategory";
 
 describe("SupplyRepository", () => {
@@ -141,11 +141,13 @@ describe("SupplyRepository", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(RepositoryError);
         if (error instanceof RepositoryError) {
-          expect(error.internalDetails).toBe(
+          expect(error.internalMessage).toContain(
             "SQLITE_CONSTRAINT: FOREIGN KEY constraint failed"
           );
           expect(error.statusCode).toBe(500);
-          expect(error.responseMessage).toBe("Error saving supply");
+          expect(error.publicMessage).toBe(
+            "Error occurred while saving supply"
+          );
         }
       }
     });
@@ -158,9 +160,11 @@ describe("SupplyRepository", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(RepositoryError);
         if (error instanceof RepositoryError) {
-          expect(error.responseMessage).toBe("Error fetching supplies");
+          expect(error.publicMessage).toBe(
+            "Error occurred while fetching supplies"
+          );
           expect(error.statusCode).toBe(500);
-          expect(error.internalDetails).toContain("SQLITE_ERROR");
+          expect(error.internalMessage).toContain("SQLITE_ERROR");
         }
       }
     });
