@@ -9,10 +9,7 @@ export const errorHandler = (
 ): void => {
 
   if (error instanceof RepositoryError) {
-    console.error(`== Repository error: ${error.internalDetails} ==`);
-    res.status(error.statusCode).json({
-      error: error.responseMessage,
-    });
+    //TODO
   }
 
   console.error(error);

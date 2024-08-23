@@ -6,7 +6,6 @@ import "reflect-metadata";
 import { appDataSource } from "./config/data-source";
 import { authDataSource } from "./config/data-source";
 import supplyRouter from "./business/routes/SupplyRoutes";
-import supplyCategoryRouter from "./business/routes/SupplyCategoryRoutes";
 import { errorHandler } from "./middleware/errorHandler";
 import userRoute from "./auth/routes/userRoutes";
 
@@ -19,7 +18,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api/supplies", supplyRouter);
-app.use("/api/supplyCategories", supplyCategoryRouter); 
 app.use("/api/users", userRoute);
 
 app.use(errorHandler);

@@ -21,4 +21,12 @@ export class Role{
     constructor(name:string){
         this.name = name;
     }
+
+    setUsers(users: User[]): void{
+        this.users = users;
+    }
+
+    setPermissions(permissions:Permission[]):void{
+        this.permissions = permissions;
+    }
 }

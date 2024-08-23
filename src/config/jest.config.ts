@@ -9,7 +9,6 @@ export default {
     testMatch: ['<rootDir>/src/**/*.test.ts'],
     collectCoverage: false,
     coverageDirectory: 'coverage',
-    coverageReporters: ['json', 'lcov', 'text', 'clover'],
-    
+    coverageReporters: ['json', 'lcov', 'text', 'clover']    
   };
   

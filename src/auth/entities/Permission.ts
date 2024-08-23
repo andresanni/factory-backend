@@ -11,4 +11,12 @@ export class Permission{
 
     @ManyToMany(()=>Role, (role)=> role.permissions)
     roles: Role[];
+
+    constructor(description: string){
+        this.description = description;
+    }
+
+    setRoles(roles: Role[]): void{
+        this.roles = roles;
+    }
 }
