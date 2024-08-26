@@ -7,7 +7,7 @@ import { Permissions } from "../../types";
 import { Role } from "../../entities/Role";
 import { Repository } from "typeorm";
 import { RoleRelations } from "../RoleRepository";
-import { RepositoryError } from "../../../errors/RepositoryError";
+import { RepositoryLayerError } from "../../../errors/AppError";
 
 describe("RoleRepository", () => {
   let roleRepository: RoleRepository;
@@ -155,7 +155,7 @@ describe("RoleRepository", () => {
           await roleRepository.findAll(["invalidRelation" as RoleRelations]);
           fail("It should have thrown an error");
         } catch (error) {
-          expect(error).toBeInstanceOf(RepositoryError);
+          expect(error).toBeInstanceOf(RepositoryLayerError);
         }
       });
     });
@@ -212,6 +212,11 @@ describe("RoleRepository", () => {
           ],
         });
       });
+
+      it("should return null with not valid id", async()=>{
+        const result = await roleRepository.findById(2, ["permissions"]);
+        expect(result).toBeNull();
+      });
     });
   });
 
@@ -229,9 +234,35 @@ describe("RoleRepository", () => {
       const addedRole = await dataSourceRepository.findOneBy({ id: result.id });
 
       expect(roles).toHaveLength(2);
+    });
+  });
 
-      console.log("result",result);
-      console.log("addedRole", addedRole);
+  describe("update", () => {
+    it("should update a role", async () => {
+      const id = 1;
+      const changedRole = new Role("changedAdmin");
+      const result = await roleRepository.update(id, changedRole);
+      const expectedRole = { ...changedRole, id: 1 };
+      expect(result).toEqual(expectedRole);
+    });
+  });
+
+  describe("delete", () => {
+    it("should throw a RepositoryError when trying to delete a role with foreign key constraints", async () => {
+      const id = role.id;
+      try {
+        if (!id) throw new Error("Id not found");
+        await roleRepository.delete(id);
+        fail("Expected error not thrown");
+      } catch (error) {
+        expect(error).toBeInstanceOf(RepositoryLayerError);
+        if (error instanceof RepositoryLayerError) {
+          expect(error.publicMessage).toContain("Error occurred while deleting role");
+          expect(error.internalMessage).toContain(
+            "FOREIGN KEY constraint failed"
+          );
+        }
+      }
     });
   });
 });

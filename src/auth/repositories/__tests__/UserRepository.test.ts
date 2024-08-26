@@ -2,7 +2,7 @@ import { UserRepository } from "../UserRepository";
 import { authTestDataSource } from "../../../config/data-source";
 import { User } from "../../entities/User";
 import { Role } from "../../entities/Role";
-import { RepositoryError } from "../../../errors/RepositoryError";
+import { RepositoryLayerError } from "../../../errors/AppError";
 
 describe("UserRepository", () => {
   let userRepository: UserRepository;
@@ -68,8 +68,8 @@ describe("UserRepository", () => {
       try {
         await userRepository.create(newWrongUser);
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
+        expect(error).toBeInstanceOf(RepositoryLayerError);
+        if (error instanceof RepositoryLayerError) {
           expect(error.internalMessage).toContain(
             "SQLITE_CONSTRAINT: UNIQUE constraint failed"
           );
@@ -257,8 +257,8 @@ describe("UserRepository", () => {
       try {
         await userRepository.update(userId, userToUpdate);
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryError);
-        if (error instanceof RepositoryError) {
+        expect(error).toBeInstanceOf(RepositoryLayerError);
+        if (error instanceof RepositoryLayerError) {
           expect(error.internalMessage).toContain(
             "SQLITE_CONSTRAINT: UNIQUE constraint failed"
           );

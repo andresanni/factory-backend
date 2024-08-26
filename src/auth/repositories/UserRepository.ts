@@ -1,7 +1,8 @@
 import { DataSource, Repository } from "typeorm";
 import { User } from "../entities/User";
-import { handleError } from "../../utils/respositoryUtils";
+import { handleError } from "../../utils/errorHandlerUtil";
 import { UpdateResult, DeleteResult } from "typeorm";
+import { ErrorLayer } from "../../errors/AppError";
 
 export class UserRepository {
   private repository: Repository<User>;
@@ -14,7 +15,14 @@ export class UserRepository {
     try {
       return await this.repository.save(user);
     } catch (error) {
-      handleError("creating user", error, this.constructor.name);
+      handleError(
+        "creating user",
+        "create()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -25,7 +33,14 @@ export class UserRepository {
         relations: ["role"],
       });
     } catch (error) {
-      handleError("fetching user by id", error, this.constructor.name);
+      handleError(
+        "fetching user by id",
+        "findById()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -36,7 +51,14 @@ export class UserRepository {
         relations: ["role"],
       });
     } catch (error) {
-      handleError("fetching user by username", error, this.constructor.name);
+      handleError(
+        "fetching user by username",
+        "findByUsername()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -44,7 +66,14 @@ export class UserRepository {
     try {
       return await this.repository.find({relations:["role"]});
     } catch (error) {
-      handleError("fetching users", error, this.constructor.name);
+      handleError(
+        "fetching all users",
+        "findAll()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -53,7 +82,14 @@ export class UserRepository {
       const result: UpdateResult = await this.repository.update(id, item);
       return result.affected ? await this.findById(id) : null;
     } catch (error) {
-      handleError("updating user", error, this.constructor.name);
+      handleError(
+        "updating user",
+        "upadate()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -66,7 +102,14 @@ export class UserRepository {
         result.affected > 0
       );
     } catch (error) {
-      handleError("deleting user", error, this.constructor.name);
+      handleError(
+        "deleting user",
+        "delete()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 }

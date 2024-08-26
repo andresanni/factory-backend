@@ -1,39 +1,38 @@
-import {
-  Repository,
-  DataSource,
-  FindOptionsRelations,
-  UpdateResult,
-} from "typeorm";
-import { Role } from "../entities/Role";
+import { DataSource, Repository } from "typeorm";
+import { Permission } from "../entities/Permission";
+import { FindOptionsRelations, UpdateResult } from "typeorm";
 import { handleError } from "../../utils/errorHandlerUtil";
 import { ErrorLayer } from "../../errors/AppError";
 
-export type RoleRelations = "users" | "permissions";
+export type PermissionRelations = "roles";
 
-export class RoleRepository {
-  private repository: Repository<Role>;
+export class PermissionRepository {
+  private repository: Repository<Permission>;
 
   constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(Role);
+    this.repository = dataSource.getRepository(Permission);
   }
 
   private buildRelations(
-    relations: RoleRelations[]
-  ): FindOptionsRelations<Role> {
-    return relations.reduce<FindOptionsRelations<Role>>((acc, relation) => {
-      acc[relation] = true;
-      return acc;
-    }, {});
+    relations: PermissionRelations[]
+  ): FindOptionsRelations<Permission> {
+    return relations.reduce<FindOptionsRelations<Permission>>(
+      (acc, relation) => {
+        acc[relation] = true;
+        return acc;
+      },
+      {}
+    );
   }
 
-  async findAll(relations: RoleRelations[] = []): Promise<Role[]> {
+  async findAll(relations: PermissionRelations[] = []): Promise<Permission[]> {
     try {
       return await this.repository.find({
         relations: this.buildRelations(relations),
       });
     } catch (error) {
       handleError(
-        "fetching all roles",
+        "fetching all permissions",
         "findAll()",
         error,
         500,
@@ -45,8 +44,8 @@ export class RoleRepository {
 
   async findById(
     id: number,
-    relations: RoleRelations[] = []
-  ): Promise<Role | null> {
+    relations: PermissionRelations[] = []
+  ): Promise<Permission | null> {
     try {
       return await this.repository.findOne({
         where: { id },
@@ -54,7 +53,7 @@ export class RoleRepository {
       });
     } catch (error) {
       handleError(
-        "fetching role by id",
+        "fetching permission by id",
         "findById()",
         error,
         500,
@@ -64,27 +63,12 @@ export class RoleRepository {
     }
   }
 
-  async findByName(name: string): Promise<Role | null> {
+  async create(permission: Permission): Promise<Permission> {
     try {
-      return await this.repository.findOneBy({ name });
+      return await this.repository.save(permission);
     } catch (error) {
       handleError(
-        "fetching role by name",
-        "findByName()",
-        error,
-        500,
-        ErrorLayer.REPOSITORY,
-        this.constructor.name
-      );
-    }
-  }
-
-  async create(role: Role): Promise<Role> {
-    try {
-      return await this.repository.save(role);
-    } catch (error) {
-      handleError(
-        "creating role",
+        "creating permission",
         "create()",
         error,
         500,
@@ -94,13 +78,13 @@ export class RoleRepository {
     }
   }
 
-  async update(id: number, item: Role): Promise<Role | null> {
+  async update(id: number, item: Permission): Promise<Permission | null> {
     try {
       const result: UpdateResult = await this.repository.update(id, item);
       return result.affected ? await this.findById(id) : null;
     } catch (error) {
       handleError(
-        "updating role",
+        "updating permission",
         "update()",
         error,
         500,
@@ -116,7 +100,7 @@ export class RoleRepository {
       return result.affected ? true : false;
     } catch (error) {
       handleError(
-        "deleting role",
+        "deleting permission",
         "delete()",
         error,
         500,

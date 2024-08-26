@@ -1,7 +1,7 @@
 import { SupplyRepository } from "../SupplyRepository";
 import { testDataSource } from "../../../config/data-source";
 import { Supply } from "../../entities/Supply";
-import { RepositoryError } from "../../../errors/RepositoryError";
+import { RepositoryError } from "../../../errors/AppError";
 import { SupplyCategory } from "../../entities/SupplyCategory";
 
 describe("SupplyRepository", () => {
