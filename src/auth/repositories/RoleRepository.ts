@@ -96,8 +96,13 @@ export class RoleRepository {
 
   async update(id: number, item: Role): Promise<Role | null> {
     try {
-      const result: UpdateResult = await this.repository.update(id, item);
-      return result.affected ? await this.findById(id) : null;
+      const existingRole = await this.repository.findOne({ where: { id }, relations: ["permissions"] });
+      if (!existingRole) {
+        throw new Error(`Role with id ${id} not found`);
+      }
+      Object.assign(existingRole, item);
+      const updatedRole = await this.repository.save(existingRole);
+      return updatedRole;
     } catch (error) {
       handleError(
         "updating role",

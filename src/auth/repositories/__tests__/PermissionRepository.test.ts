@@ -67,4 +67,17 @@ describe("PermissionRepository", () => {
       expect(savedRole.permissions).toHaveLength(mockPermissions.length);
     });
   });
+
+  describe("findByName", () => {
+    it("should return the correct permission when it exists", async () => {
+      const permission = await repository.findByName(Permissions.CREATE_ROLE);
+      expect(permission).not.toBeNull();
+      expect(permission?.description).toBe(Permissions.CREATE_ROLE);
+    });
+
+    it("should return null when the permission does not exist", async () => {
+      const permission = await repository.findByName("nonexistent:permission");
+      expect(permission).toBeNull();
+    });
+  });
 });

@@ -109,4 +109,19 @@ export class PermissionRepository {
       );
     }
   }
+
+  async findByName(name: string): Promise<Permission | null> {
+    try {
+      return await this.repository.findOne({ where: { description: name } });
+    } catch (error) {
+      handleError(
+        "fetching permission by name",
+        "findByName()",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
+    }
+  }
 }
