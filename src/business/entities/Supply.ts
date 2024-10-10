@@ -9,11 +9,13 @@ export class Supply {
   @Column()
   name: string;
 
-  @ManyToOne(() => SupplyCategory, (category) => category.supplies, {eager:true})
+  @ManyToOne(() => SupplyCategory, (category) => category.supplies, {
+    eager: true,
+  })
   category: SupplyCategory;
 
-constructor(name: string, category:SupplyCategory){
-  this.name = name;
-  this.category = category;
-}
+  constructor(name: string, category: SupplyCategory) {
+    this.name = name;
+    this.category = category;
+  }
 }

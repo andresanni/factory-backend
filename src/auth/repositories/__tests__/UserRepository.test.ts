@@ -31,7 +31,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
 
       const savedUser = await userRepository.create(newUser);
@@ -53,7 +53,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
       await authTestDataSource.getRepository(User).save(newUser);
 
@@ -63,7 +63,7 @@ describe("UserRepository", () => {
         "testwronguser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
       try {
         await userRepository.create(newWrongUser);
@@ -71,11 +71,11 @@ describe("UserRepository", () => {
         expect(error).toBeInstanceOf(RepositoryLayerError);
         if (error instanceof RepositoryLayerError) {
           expect(error.internalMessage).toContain(
-            "SQLITE_CONSTRAINT: UNIQUE constraint failed"
+            "SQLITE_CONSTRAINT: UNIQUE constraint failed",
           );
           expect(error.statusCode).toBe(500);
           expect(error.publicMessage).toBe(
-            "Error occurred while creating user"
+            "Error occurred while creating user",
           );
         }
       }
@@ -90,14 +90,14 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
 
     it("should find a user by username", async () => {
       const foundUser = await userRepository.findByUsername("testuser");
-      if(!foundUser) throw new Error("No user found");
+      if (!foundUser) throw new Error("No user found");
       expect(foundUser).toHaveProperty("id");
       expect(foundUser.username).toBe("testuser");
       expect(foundUser.passwordHash).toBe("hashedpassword");
@@ -143,7 +143,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
@@ -181,7 +181,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
@@ -224,7 +224,7 @@ describe("UserRepository", () => {
       if (!userToUpdate) throw new Error("No user found");
       const updateResult = await userRepository.update(
         maxUserId + 1,
-        userToUpdate
+        userToUpdate,
       );
       expect(updateResult).toBeNull();
     });
@@ -236,7 +236,7 @@ describe("UserRepository", () => {
         "seconduser@example.com",
         role,
         "Second",
-        "User"
+        "User",
       );
       await authTestDataSource.getRepository(User).save(secondUser);
 
@@ -260,11 +260,11 @@ describe("UserRepository", () => {
         expect(error).toBeInstanceOf(RepositoryLayerError);
         if (error instanceof RepositoryLayerError) {
           expect(error.internalMessage).toContain(
-            "SQLITE_CONSTRAINT: UNIQUE constraint failed"
+            "SQLITE_CONSTRAINT: UNIQUE constraint failed",
           );
           expect(error.statusCode).toBe(500);
           expect(error.publicMessage).toBe(
-            "Error occurred while updating user"
+            "Error occurred while updating user",
           );
         }
       }

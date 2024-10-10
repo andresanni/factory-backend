@@ -12,7 +12,11 @@ export class SupplyService implements ICrudService<Supply> {
     this.repository = repository;
   }
 
-  private handleError(operation: string, error: unknown, criteria?:string): never {
+  private handleError(
+    operation: string,
+    error: unknown,
+    criteria?: string,
+  ): never {
     if (error instanceof RepositoryError) {
       throw ServiceError.fromRepositoryError(error, criteria);
     }
@@ -21,7 +25,7 @@ export class SupplyService implements ICrudService<Supply> {
       `Error ${operation}`,
       StatusCode.ServerErrorInternal,
       ErrorSource.Service,
-      error instanceof Error ? error.message : "Unkown error"
+      error instanceof Error ? error.message : "Unkown error",
     );
   }
 
@@ -34,23 +38,21 @@ export class SupplyService implements ICrudService<Supply> {
   }
 
   async findById(id: number): Promise<Supply | null> {
-    try{
+    try {
       return await this.repository.findById(id);
-    }
-    catch(error){
+    } catch (error) {
       this.handleError("fetching supply", error, `id: ${id}`);
     }
   }
 
   async create(item: Supply): Promise<Supply | RepositoryError> {
-    try{
+    try {
       return await this.repository.save(item);
-    }
-    catch(error){
+    } catch (error) {
       this.handleError("saving supply", error);
     }
   }
-  
+
   update(_id: number, _item: Supply): Promise<Supply | RepositoryError | null> {
     throw new Error("Method not implemented.");
   }

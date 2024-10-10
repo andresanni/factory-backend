@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Request, Response, Router } from "express";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
@@ -21,36 +16,33 @@ router.post(
     body("email").isEmail().withMessage("Invalid email format"),
   ],
   async (req: Request, res: Response) => {
-
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
     const { username, password, email, name, surname } = req.body;
 
-    try{
-        const userRepository = authDataSource.getRepository(User);
+    try {
+      const userRepository = authDataSource.getRepository(User);
 
-        const existingUser = await userRepository.findOneBy({username});
+      const existingUser = await userRepository.findOneBy({ username });
 
-        if(existingUser){
-            return res.status(400).json({message: "Username already exists"});
-        }
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
 
-        const saltRounds = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const user = new User(username, hashedPassword, email, name, surname);
-        await userRepository.save(user);
+      const saltRounds = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const user = new User(username, hashedPassword, email, name, surname);
+      await userRepository.save(user);
 
-        res.status(201).json({message: "User registered successfully"});
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
-    catch(error){
-        console.error(error);
-        res.status(500).json({message: "Internal server error"});
-    }
-    
-  }
+  },
 );
 
 export default router;

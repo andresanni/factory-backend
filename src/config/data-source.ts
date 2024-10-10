@@ -17,22 +17,22 @@ export const appDataSource = new DataSource({
 
 export const authDataSource = new DataSource({
   type: "sqlite",
-  database:"./database.sqlite",
-  entities:["src/auth/entities/**/*.ts"],
-  synchronize: true
+  database: "./database.sqlite",
+  entities: ["src/auth/entities/**/*.ts"],
+  synchronize: true,
 });
 
 export const authTestDataSource = new DataSource({
   type: "sqlite",
-  database:":memory:",
-  entities:["src/auth/entities/**/*.ts"],
-  synchronize: true
+  database: ":memory:",
+  entities: ["src/auth/entities/**/*.ts"],
+  synchronize: true,
 });
 
 export const testDataSource = new DataSource({
-  type:"sqlite",
+  type: "sqlite",
   database: ":memory:",
   entities: ["src/business/entities/**/*.ts"],
   synchronize: true,
-  logging:false
+  logging: false,
 });

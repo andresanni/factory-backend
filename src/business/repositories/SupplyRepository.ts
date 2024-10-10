@@ -10,7 +10,6 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     this.repository = dataSource.getRepository(Supply);
   }
 
-
   async findAll(): Promise<Supply[]> {
     try {
       return await this.repository.find({ relations: ["category"] });

@@ -1,4 +1,4 @@
-import 'express-async-errors';
+import "express-async-errors";
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -23,14 +23,12 @@ app.use("/api/users", userRoute);
 app.use(errorHandler);
 
 Promise.all([appDataSource.initialize(), authDataSource.initialize()])
-.then(()=>{
-  console.log("Conected to databases");
-  app.listen(PORT, ()=>{
-    console.log(`Server running at port ${PORT}`);
+  .then(() => {
+    console.log("Conected to databases");
+    app.listen(PORT, () => {
+      console.log(`Server running at port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log("Error connecting to database", error);
   });
-})
-.catch((error)=>{
-  console.log("Error connecting to database", error);
-});
-
-

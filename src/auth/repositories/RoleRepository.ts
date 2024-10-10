@@ -2,7 +2,6 @@ import {
   Repository,
   DataSource,
   FindOptionsRelations,
-  UpdateResult,
 } from "typeorm";
 import { Role } from "../entities/Role";
 import { handleError } from "../../utils/errorHandlerUtil";
@@ -18,7 +17,7 @@ export class RoleRepository {
   }
 
   private buildRelations(
-    relations: RoleRelations[]
+    relations: RoleRelations[],
   ): FindOptionsRelations<Role> {
     return relations.reduce<FindOptionsRelations<Role>>((acc, relation) => {
       acc[relation] = true;
@@ -38,14 +37,14 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
 
   async findById(
     id: number,
-    relations: RoleRelations[] = []
+    relations: RoleRelations[] = [],
   ): Promise<Role | null> {
     try {
       return await this.repository.findOne({
@@ -59,7 +58,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -74,7 +73,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -89,14 +88,17 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
 
   async update(id: number, item: Role): Promise<Role | null> {
     try {
-      const existingRole = await this.repository.findOne({ where: { id }, relations: ["permissions"] });
+      const existingRole = await this.repository.findOne({
+        where: { id },
+        relations: ["permissions"],
+      });
       if (!existingRole) {
         throw new Error(`Role with id ${id} not found`);
       }
@@ -110,7 +112,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -126,7 +128,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }

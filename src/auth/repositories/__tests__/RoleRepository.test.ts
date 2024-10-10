@@ -50,7 +50,7 @@ describe("RoleRepository", () => {
         "testuser1@example.com",
         role,
         "John",
-        "Doe"
+        "Doe",
       ),
       new User(
         "testuser2",
@@ -58,7 +58,7 @@ describe("RoleRepository", () => {
         "testuser2@example.com",
         role,
         "John2",
-        "Doe2"
+        "Doe2",
       ),
     ];
     //Save users in ddbb
@@ -213,7 +213,7 @@ describe("RoleRepository", () => {
         });
       });
 
-      it("should return null with not valid id", async()=>{
+      it("should return null with not valid id", async () => {
         const result = await roleRepository.findById(2, ["permissions"]);
         expect(result).toBeNull();
       });
@@ -257,9 +257,11 @@ describe("RoleRepository", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(RepositoryLayerError);
         if (error instanceof RepositoryLayerError) {
-          expect(error.publicMessage).toContain("Error occurred while deleting role");
+          expect(error.publicMessage).toContain(
+            "Error occurred while deleting role",
+          );
           expect(error.internalMessage).toContain(
-            "FOREIGN KEY constraint failed"
+            "FOREIGN KEY constraint failed",
           );
         }
       }

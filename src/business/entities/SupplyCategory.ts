@@ -12,7 +12,7 @@ export class SupplyCategory {
   @OneToMany(() => Supply, (supply) => supply.category)
   supplies?: Supply[];
 
-  constructor(name:string){
+  constructor(name: string) {
     this.name = name;
   }
 }

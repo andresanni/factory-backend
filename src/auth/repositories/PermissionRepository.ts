@@ -14,14 +14,14 @@ export class PermissionRepository {
   }
 
   private buildRelations(
-    relations: PermissionRelations[]
+    relations: PermissionRelations[],
   ): FindOptionsRelations<Permission> {
     return relations.reduce<FindOptionsRelations<Permission>>(
       (acc, relation) => {
         acc[relation] = true;
         return acc;
       },
-      {}
+      {},
     );
   }
 
@@ -37,14 +37,14 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
 
   async findById(
     id: number,
-    relations: PermissionRelations[] = []
+    relations: PermissionRelations[] = [],
   ): Promise<Permission | null> {
     try {
       return await this.repository.findOne({
@@ -58,7 +58,7 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -73,7 +73,7 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -89,7 +89,7 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -105,7 +105,7 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -120,7 +120,7 @@ export class PermissionRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }

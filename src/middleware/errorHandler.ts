@@ -5,14 +5,13 @@ export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
-
   if (error instanceof RepositoryError) {
     //TODO
   }
 
   console.error(error);
-  res.status(500).json({error: "An unexpected error occurred"});
+  res.status(500).json({ error: "An unexpected error occurred" });
   next();
 };

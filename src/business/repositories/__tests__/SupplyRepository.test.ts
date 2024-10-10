@@ -90,7 +90,7 @@ describe("SupplyRepository", () => {
         category: "Invalid Category",
       };
       await expect(repository.save(invalidSupply as any)).rejects.toThrow(
-        RepositoryError
+        RepositoryError,
       );
     });
   });
@@ -142,11 +142,11 @@ describe("SupplyRepository", () => {
         expect(error).toBeInstanceOf(RepositoryError);
         if (error instanceof RepositoryError) {
           expect(error.internalMessage).toContain(
-            "SQLITE_CONSTRAINT: FOREIGN KEY constraint failed"
+            "SQLITE_CONSTRAINT: FOREIGN KEY constraint failed",
           );
           expect(error.statusCode).toBe(500);
           expect(error.publicMessage).toBe(
-            "Error occurred while saving supply"
+            "Error occurred while saving supply",
           );
         }
       }
@@ -161,7 +161,7 @@ describe("SupplyRepository", () => {
         expect(error).toBeInstanceOf(RepositoryError);
         if (error instanceof RepositoryError) {
           expect(error.publicMessage).toBe(
-            "Error occurred while fetching supplies"
+            "Error occurred while fetching supplies",
           );
           expect(error.statusCode).toBe(500);
           expect(error.internalMessage).toContain("SQLITE_ERROR");

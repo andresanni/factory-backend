@@ -21,7 +21,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -39,7 +39,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -57,14 +57,14 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.repository.find({relations:["role"]});
+      return await this.repository.find({ relations: ["role"] });
     } catch (error) {
       handleError(
         "fetching all users",
@@ -72,7 +72,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -88,7 +88,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }
@@ -108,7 +108,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name
+        this.constructor.name,
       );
     }
   }

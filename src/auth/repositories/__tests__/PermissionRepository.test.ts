@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Repository } from "typeorm";
 import { PermissionRepository } from "../PermissionRepository";
 import { authTestDataSource } from "../../../config/data-source";
@@ -46,7 +45,6 @@ describe("PermissionRepository", () => {
 
   describe("Relationship between Role and Permission", () => {
     it("should create a role with permissions and verify the relationship", async () => {
-      
       //Crear un Rol Mock
       const mockRole = new Role("Admin");
       await roleRepository.save(mockRole);
@@ -58,12 +56,15 @@ describe("PermissionRepository", () => {
       //Verificar la relación desde el lado del Permiso
       const savedPermissions = await repository.findAll(["roles"]);
       savedPermissions.forEach((permission) => {
-        expect(permission.roles).toContainEqual({id:1, name:"Admin"});
+        expect(permission.roles).toContainEqual({ id: 1, name: "Admin" });
       });
 
-    //Verificar la relacion desde el lado del Rol   
-      const savedRole: Role | null = await roleRepository.findOne({where:{id: mockRole.id}, relations:["permissions"]});
-      if(!savedRole) throw new Error("Role not found");
+      //Verificar la relacion desde el lado del Rol
+      const savedRole: Role | null = await roleRepository.findOne({
+        where: { id: mockRole.id },
+        relations: ["permissions"],
+      });
+      if (!savedRole) throw new Error("Role not found");
       expect(savedRole.permissions).toHaveLength(mockPermissions.length);
     });
   });

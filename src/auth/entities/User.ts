@@ -24,13 +24,19 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
 
-  
-  constructor(username: string, passwordHash: string, email: string, role: Role, name?: string, surname?: string) {
-     this.username = username;
-     this.passwordHash = passwordHash;
-     this.email = email;
-     this.name = name; 
-     this.surname = surname;
-     this.role = role;
+  constructor(
+    username: string,
+    passwordHash: string,
+    email: string,
+    role: Role,
+    name?: string,
+    surname?: string,
+  ) {
+    this.username = username;
+    this.passwordHash = passwordHash;
+    this.email = email;
+    this.name = name;
+    this.surname = surname;
+    this.role = role;
   }
 }
