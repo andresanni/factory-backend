@@ -53,29 +53,34 @@ describe("RoleService", () => {
 
     it("should throw an error if the user is not authorized", async () => {
       authenticatedUser.permissions = [];
+      let err: ServiceLayerError | null = null;
+
       try {
         await service.createRole(authenticatedUser, "Test Role");
       } catch (error) {
-        expect(error).toBeInstanceOf(ServiceLayerError);
-        expect((error as ServiceLayerError).internalMessage).toBe(
-          "Authorization error\n create:role isn't in user permissions. User permissions: empty",
-        );
-        expect((error as ServiceLayerError).statusCode).toBe(403);
+        err = error as ServiceLayerError;
       }
+      expect(err).toBeInstanceOf(ServiceLayerError);
+      expect(err?.internalMessage).toBe(
+        "Authorization error\n create:role isn't in user permissions. User permissions: empty"
+      );
+      expect(err?.statusCode).toBe(403);
     });
 
     it("should throw an error if the role already exists", async () => {
-      const roles = await repository.findAll();
       const roleName: string = "Test Role";
+      let err: ServiceLayerError | null = null;
+
       await service.createRole(authenticatedUser, roleName);
       try {
         await service.createRole(authenticatedUser, roleName);
       } catch (error) {
-        expect(error).toBeInstanceOf(ServiceLayerError);
-        expect((error as ServiceLayerError).internalMessage).toBe(
-          "Role Test Role already exists",
-        );
+        err = error as ServiceLayerError;
       }
+      expect(err).toBeInstanceOf(ServiceLayerError);
+      expect((err as ServiceLayerError).internalMessage).toBe(
+        "Role Test Role already exists"
+      );
     });
 
     it("should create a new role with initial permissions", async () => {
@@ -109,19 +114,19 @@ describe("RoleService", () => {
       const updatedRole = await service.assignPermissionsToRole(
         authenticatedUser,
         roleName,
-        permissionsNamesToAssign,
+        permissionsNamesToAssign
       );
 
       expect(updatedRole.permissions?.length).toBe(2);
       expect(
         updatedRole.permissions?.some(
-          (p) => p.description === Permissions.CREATE_ROLE,
-        ),
+          (p) => p.description === Permissions.CREATE_ROLE
+        )
       ).toBe(true);
       expect(
         updatedRole.permissions?.some(
-          (p) => p.description === Permissions.READ_ROLE,
-        ),
+          (p) => p.description === Permissions.READ_ROLE
+        )
       ).toBe(true);
     });
 
@@ -138,8 +143,8 @@ describe("RoleService", () => {
         service.assignPermissionsToRole(
           authenticatedUser,
           roleName,
-          permissionsNames,
-        ),
+          permissionsNames
+        )
       ).resolves.not.toThrow();
     });
 
@@ -151,23 +156,26 @@ describe("RoleService", () => {
       ];
 
       authenticatedUser.permissions = authenticatedUser.permissions.filter(
-        (permission) => permission !== Permissions.UPDATE_ROLE,
+        (permission) => permission !== Permissions.UPDATE_ROLE
       );
       await service.createRole(authenticatedUser, roleName);
+
+      let err: ServiceLayerError | null = null;
 
       try {
         await service.assignPermissionsToRole(
           authenticatedUser,
           roleName,
-          permissionsNames,
+          permissionsNames
         );
       } catch (error) {
-        expect(error).toBeInstanceOf(ServiceLayerError);
-        expect((error as ServiceLayerError).internalMessage).toBe(
-          "Authorization error\n update:role isn't in user permissions. User permissions: create:role",
-        );
-        expect((error as ServiceLayerError).statusCode).toBe(403);
+        err = error as ServiceLayerError;
       }
+      expect(err).toBeInstanceOf(ServiceLayerError);
+      expect((err as ServiceLayerError).internalMessage).toBe(
+        "Authorization error\n update:role isn't in user permissions. User permissions: create:role"
+      );
+      expect((err as ServiceLayerError).statusCode).toBe(403);
     });
   });
 });

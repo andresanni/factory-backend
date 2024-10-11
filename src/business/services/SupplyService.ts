@@ -15,7 +15,7 @@ export class SupplyService implements ICrudService<Supply> {
   private handleError(
     operation: string,
     error: unknown,
-    criteria?: string,
+    criteria?: string
   ): never {
     if (error instanceof RepositoryError) {
       throw ServiceError.fromRepositoryError(error, criteria);
@@ -25,7 +25,7 @@ export class SupplyService implements ICrudService<Supply> {
       `Error ${operation}`,
       StatusCode.ServerErrorInternal,
       ErrorSource.Service,
-      error instanceof Error ? error.message : "Unkown error",
+      error instanceof Error ? error.message : "Unkown error"
     );
   }
 

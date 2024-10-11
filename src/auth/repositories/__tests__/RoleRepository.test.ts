@@ -247,7 +247,7 @@ describe("RoleRepository", () => {
   describe("delete", () => {
     it("should throw a RepositoryError when trying to delete a role with foreign key constraints", async () => {
       const id = role.id;
-      let error: RepositoryLayerError | null = null;
+      let err: RepositoryLayerError | null = null;
       if (!id) throw new Error("Id not found");
 
       await expect(roleRepository.delete(id)).rejects.toThrow(
@@ -257,16 +257,17 @@ describe("RoleRepository", () => {
       try {
         await roleRepository.delete(id);
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryLayerError);
-        if (error instanceof RepositoryLayerError) {
-          expect(error.publicMessage).toContain(
-            "Error occurred while deleting role"
-          );
-          expect(error.internalMessage).toContain(
-            "FOREIGN KEY constraint failed"
-          );
-        }
+        err = error as RepositoryLayerError;
       }
+      expect(err).toBeInstanceOf(RepositoryLayerError);
+
+      expect((err as RepositoryLayerError).publicMessage).toContain(
+        "Error occurred while deleting role"
+      );
+
+      expect((err as RepositoryLayerError).internalMessage).toContain(
+        "FOREIGN KEY constraint failed"
+      );
     });
   });
 });

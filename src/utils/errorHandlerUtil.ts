@@ -7,12 +7,12 @@ export function handleError(
   error: unknown,
   statusCode: number = 500,
   layer: ErrorLayer,
-  className: string,
+  className: string
 ): never {
   if (error instanceof Error) {
     //Logging
     console.error(
-      `App Error:\nLayer:${layer}\nClass:${className}\nMethod:${method}\nOriginal error:${error}`,
+      `App Error:\nLayer:${layer}\nClass:${className}\nMethod:${method}\nOriginal error:${error}`
     );
     //Creating public message
     const publicMessage = `Error occurred while ${operation}`;
@@ -23,7 +23,7 @@ export function handleError(
         method,
         error.message,
         statusCode,
-        publicMessage,
+        publicMessage
       );
     }
 
@@ -33,7 +33,7 @@ export function handleError(
         method,
         error.message,
         statusCode,
-        publicMessage,
+        publicMessage
       );
     }
   }

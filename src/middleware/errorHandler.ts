@@ -5,7 +5,7 @@ export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void => {
   if (error instanceof RepositoryError) {
     //TODO

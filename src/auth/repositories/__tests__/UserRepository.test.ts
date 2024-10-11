@@ -31,7 +31,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
 
       const savedUser = await userRepository.create(newUser);
@@ -53,7 +53,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
       await authTestDataSource.getRepository(User).save(newUser);
 
@@ -63,22 +63,25 @@ describe("UserRepository", () => {
         "testwronguser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
+      let err: RepositoryLayerError | null = null;
+
       try {
         await userRepository.create(newWrongUser);
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryLayerError);
-        if (error instanceof RepositoryLayerError) {
-          expect(error.internalMessage).toContain(
-            "SQLITE_CONSTRAINT: UNIQUE constraint failed",
-          );
-          expect(error.statusCode).toBe(500);
-          expect(error.publicMessage).toBe(
-            "Error occurred while creating user",
-          );
-        }
+        err = error as RepositoryLayerError;
       }
+
+      expect(err).toBeInstanceOf(RepositoryLayerError);
+
+      expect((err as RepositoryLayerError).internalMessage).toContain(
+        "SQLITE_CONSTRAINT: UNIQUE constraint failed"
+      );
+      expect((err as RepositoryLayerError).statusCode).toBe(500);
+      expect((err as RepositoryLayerError).publicMessage).toBe(
+        "Error occurred while creating user"
+      );
     });
   });
 
@@ -90,7 +93,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
@@ -143,7 +146,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
@@ -181,7 +184,7 @@ describe("UserRepository", () => {
         "testuser@example.com",
         role,
         "John",
-        "Doe",
+        "Doe"
       );
       await authTestDataSource.getRepository(User).save(newUser);
     });
@@ -224,7 +227,7 @@ describe("UserRepository", () => {
       if (!userToUpdate) throw new Error("No user found");
       const updateResult = await userRepository.update(
         maxUserId + 1,
-        userToUpdate,
+        userToUpdate
       );
       expect(updateResult).toBeNull();
     });
@@ -236,7 +239,7 @@ describe("UserRepository", () => {
         "seconduser@example.com",
         role,
         "Second",
-        "User",
+        "User"
       );
       await authTestDataSource.getRepository(User).save(secondUser);
 
@@ -252,22 +255,22 @@ describe("UserRepository", () => {
           relations: ["role"],
         });
       if (!userToUpdate) throw new Error("No user found");
-
       userToUpdate.username = "secondUser";
+      let err: RepositoryLayerError | null = null;
+
       try {
         await userRepository.update(userId, userToUpdate);
       } catch (error) {
-        expect(error).toBeInstanceOf(RepositoryLayerError);
-        if (error instanceof RepositoryLayerError) {
-          expect(error.internalMessage).toContain(
-            "SQLITE_CONSTRAINT: UNIQUE constraint failed",
-          );
-          expect(error.statusCode).toBe(500);
-          expect(error.publicMessage).toBe(
-            "Error occurred while updating user",
-          );
-        }
+        err = error as RepositoryLayerError;
       }
+      expect(err).toBeInstanceOf(RepositoryLayerError);
+      expect((err as RepositoryLayerError).internalMessage).toContain(
+        "SQLITE_CONSTRAINT: UNIQUE constraint failed"
+      );
+      expect((err as RepositoryLayerError).statusCode).toBe(500);
+      expect((err as RepositoryLayerError).publicMessage).toBe(
+        "Error occurred while updating user"
+      );
     });
   });
 });

@@ -1,6 +1,7 @@
 import { Supply } from "../entities/Supply";
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm";
 import { ICrudRepository } from "./ICrudRepository";
+import { ErrorLayer } from "../../errors/AppError";
 import { handleError } from "../../utils/errorHandlerUtil";
 
 export class SupplyRepository implements ICrudRepository<Supply> {
@@ -14,7 +15,14 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     try {
       return await this.repository.find({ relations: ["category"] });
     } catch (error) {
-      handleError("fetching supplies", error, this.constructor.name);
+      handleError(
+        "fetching supplies",
+        "findAll",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -22,7 +30,14 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     try {
       return await this.repository.findOneBy({ id });
     } catch (error) {
-      handleError("fetching supply", error, this.constructor.name);
+      handleError(
+        "fetching supply by id",
+        "findById",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -31,7 +46,14 @@ export class SupplyRepository implements ICrudRepository<Supply> {
       const result: UpdateResult = await this.repository.update(id, item);
       return result.affected ? await this.findById(id) : null;
     } catch (error) {
-      handleError("updating supply", error, this.constructor.name);
+      handleError(
+        "updating supply",
+        "update",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -39,7 +61,14 @@ export class SupplyRepository implements ICrudRepository<Supply> {
     try {
       return await this.repository.save(supply);
     } catch (error) {
-      handleError("saving supply", error, this.constructor.name);
+      handleError(
+        "saving supply",
+        "save",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 
@@ -52,7 +81,14 @@ export class SupplyRepository implements ICrudRepository<Supply> {
         result.affected > 0
       );
     } catch (error) {
-      handleError("deleting supply", error, this.constructor.name);
+      handleError(
+        "deleting supply",
+        "delete",
+        error,
+        500,
+        ErrorLayer.REPOSITORY,
+        this.constructor.name
+      );
     }
   }
 }
