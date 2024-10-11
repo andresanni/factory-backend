@@ -13,7 +13,7 @@ export class RoleService {
 
   constructor(
     roleRepository: RoleRepository,
-    permissionRepository: PermissionRepository,
+    permissionRepository: PermissionRepository
   ) {
     this.roleRepository = roleRepository;
     this.permissionRepository = permissionRepository;
@@ -23,14 +23,16 @@ export class RoleService {
   private checkAuthorization(
     authenticatedUser: AuthenticatedUser,
     permission: Permissions,
-    statusCode: { value: number },
+    statusCode: { value: number }
   ): boolean {
     const authorized: boolean =
       authenticatedUser.permissions.includes(permission);
     if (!authorized) {
       statusCode.value = 403;
       throw new Error(
-        `Authorization error\n ${permission} isn't in user permissions. User permissions: ${authenticatedUser.permissions.length ? authenticatedUser.permissions.join(", ") : "empty"}`,
+        `Authorization error\n ${permission} isn't in user permissions. 
+        User permissions: 
+        ${authenticatedUser.permissions.length ? authenticatedUser.permissions.join(", ") : "empty"}`
       );
     }
     return true;
@@ -38,7 +40,7 @@ export class RoleService {
   //Utility method to resolve permissions from names to objects
   private async resolvePermissions(
     permissionsNames: Permissions[],
-    statusCode: { value: number },
+    statusCode: { value: number }
   ): Promise<Permission[]> {
     const permissionsPromises = permissionsNames.map(async (permissionName) => {
       const permission =
@@ -56,14 +58,14 @@ export class RoleService {
   async createRole(
     authenticatedUser: AuthenticatedUser,
     roleName: string,
-    permissionsNames?: Permissions[],
+    permissionsNames?: Permissions[]
   ): Promise<Role> {
     const statusCode: { value: number } = { value: 500 };
     try {
       this.checkAuthorization(
         authenticatedUser,
         Permissions.CREATE_ROLE,
-        statusCode,
+        statusCode
       );
 
       const existingRole: Role | null =
@@ -79,7 +81,7 @@ export class RoleService {
       if (permissionsNames) {
         const resolvedPermissions = await this.resolvePermissions(
           permissionsNames,
-          statusCode,
+          statusCode
         );
         newRole.setPermissions(resolvedPermissions);
       }
@@ -97,7 +99,7 @@ export class RoleService {
           error,
           statusCode.value,
           ErrorLayer.SERVICE,
-          this.constructor.name,
+          this.constructor.name
         );
       }
       throw error;
@@ -107,14 +109,14 @@ export class RoleService {
   async assignPermissionsToRole(
     authenticatedUser: AuthenticatedUser,
     roleName: string,
-    permissionsNames: Permissions[],
+    permissionsNames: Permissions[]
   ): Promise<Role> {
     const statusCode: { value: number } = { value: 500 };
     try {
       this.checkAuthorization(
         authenticatedUser,
         Permissions.UPDATE_ROLE,
-        statusCode,
+        statusCode
       );
       const role: Role | null = await this.roleRepository.findByName(roleName);
 
@@ -124,7 +126,7 @@ export class RoleService {
       }
       const resolvedPermissions = await this.resolvePermissions(
         permissionsNames,
-        statusCode,
+        statusCode
       );
       role.setPermissions(resolvedPermissions);
 
@@ -149,7 +151,7 @@ export class RoleService {
           error,
           statusCode.value,
           ErrorLayer.SERVICE,
-          this.constructor.name,
+          this.constructor.name
         );
       }
       throw error;

@@ -21,7 +21,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -39,7 +39,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -57,7 +57,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -72,7 +72,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -88,7 +88,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -108,7 +108,7 @@ export class UserRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }

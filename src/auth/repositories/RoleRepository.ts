@@ -1,8 +1,4 @@
-import {
-  Repository,
-  DataSource,
-  FindOptionsRelations,
-} from "typeorm";
+import { Repository, DataSource, FindOptionsRelations } from "typeorm";
 import { Role } from "../entities/Role";
 import { handleError } from "../../utils/errorHandlerUtil";
 import { ErrorLayer } from "../../errors/AppError";
@@ -17,7 +13,7 @@ export class RoleRepository {
   }
 
   private buildRelations(
-    relations: RoleRelations[],
+    relations: RoleRelations[]
   ): FindOptionsRelations<Role> {
     return relations.reduce<FindOptionsRelations<Role>>((acc, relation) => {
       acc[relation] = true;
@@ -37,14 +33,14 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
 
   async findById(
     id: number,
-    relations: RoleRelations[] = [],
+    relations: RoleRelations[] = []
   ): Promise<Role | null> {
     try {
       return await this.repository.findOne({
@@ -58,7 +54,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -73,7 +69,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -88,7 +84,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -112,7 +108,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }
@@ -128,7 +124,7 @@ export class RoleRepository {
         error,
         500,
         ErrorLayer.REPOSITORY,
-        this.constructor.name,
+        this.constructor.name
       );
     }
   }

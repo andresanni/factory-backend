@@ -30,7 +30,7 @@ export class User {
     email: string,
     role: Role,
     name?: string,
-    surname?: string,
+    surname?: string
   ) {
     this.username = username;
     this.passwordHash = passwordHash;
