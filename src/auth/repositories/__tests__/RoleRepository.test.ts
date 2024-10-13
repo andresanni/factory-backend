@@ -219,15 +219,10 @@ describe("RoleRepository", () => {
 
   describe("create", () => {
     it("should create a new role", async () => {
-      //Create new role object
       const newRole = new Role("user");
-      //Add pemissions to thr role object
       newRole.setPermissions([permissions[0], permissions[1]]);
-      //Save using repository method
       const result = await roleRepository.create(newRole);
-      //Find using DataSource repository method
       const roles = await dataSourceRepository.find();
-      //Find the added role by its id
       const addedRole = await dataSourceRepository.findOneBy({ id: result.id });
 
       expect(roles).toHaveLength(2);
@@ -238,7 +233,8 @@ describe("RoleRepository", () => {
     it("should update a role", async () => {
       const id = 1;
       const changedRole = new Role("changedAdmin");
-      const result = await roleRepository.update(id, changedRole);
+      await roleRepository.update(id, changedRole);
+      const result = await roleRepository.findById(id);
       const expectedRole = { ...changedRole, id: 1 };
       expect(result).toEqual(expectedRole);
     });

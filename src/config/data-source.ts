@@ -27,6 +27,7 @@ export const authTestDataSource = new DataSource({
   database: ":memory:",
   entities: ["src/auth/entities/**/*.ts"],
   synchronize: true,
+  cache: false,
 });
 
 export const testDataSource = new DataSource({

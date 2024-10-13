@@ -59,9 +59,15 @@ export class RoleRepository {
     }
   }
 
-  async findByName(name: string): Promise<Role | null> {
+  async findByName(
+    name: string,
+    relations: RoleRelations[] = []
+  ): Promise<Role | null> {
     try {
-      return await this.repository.findOneBy({ name });
+      return await this.repository.findOne({
+        where: { name },
+        relations: this.buildRelations(relations),
+      });
     } catch (error) {
       handleError(
         "fetching role by name",
@@ -96,7 +102,7 @@ export class RoleRepository {
         relations: ["permissions"],
       });
       if (!existingRole) {
-        throw new Error(`Role with id ${id} not found`);
+        return null;
       }
       Object.assign(existingRole, item);
       const updatedRole = await this.repository.save(existingRole);

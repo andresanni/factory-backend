@@ -6,6 +6,7 @@ import { PermissionRepository } from "../repositories/PermissionRepository";
 import { Permission } from "../entities/Permission";
 import { ErrorLayer, RepositoryLayerError } from "../../errors/AppError";
 import { handleError } from "../../utils/errorHandlerUtil";
+import { RoleRelations } from "../repositories/RoleRepository";
 
 export class RoleService {
   private roleRepository: RoleRepository;
@@ -19,7 +20,8 @@ export class RoleService {
     this.permissionRepository = permissionRepository;
   }
 
-  //Utility method to check if the authenticated user has the required permission
+  //Utility methods
+  //method to check if the authenticated user has the required permission
   private checkAuthorization(
     authenticatedUser: AuthenticatedUser,
     permission: Permissions,
@@ -35,7 +37,7 @@ export class RoleService {
     }
     return true;
   }
-  //Utility method to resolve permissions from names to objects
+  //method to resolve permissions from names to objects
   private async resolvePermissions(
     permissionsNames: Permissions[],
     statusCode: { value: number }
@@ -104,7 +106,7 @@ export class RoleService {
     }
   }
 
-  async assignPermissionsToRole(
+  async updateRolePermissions(
     authenticatedUser: AuthenticatedUser,
     roleName: string,
     permissionsNames: Permissions[]
@@ -144,8 +146,156 @@ export class RoleService {
       }
       if (error instanceof Error) {
         handleError(
-          "assigning permissions to role",
-          "assignPermissionsToRole()",
+          "updating role permissions",
+          "updateRolePermissions()",
+          error,
+          statusCode.value,
+          ErrorLayer.SERVICE,
+          this.constructor.name
+        );
+      }
+      throw error;
+    }
+  }
+
+  async updateRoleName(
+    authenticatedUser: AuthenticatedUser,
+    roleName: string,
+    newName: string
+  ): Promise<Role> {
+    const statusCode: { value: number } = { value: 500 };
+    try {
+      this.checkAuthorization(
+        authenticatedUser,
+        Permissions.UPDATE_ROLE,
+        statusCode
+      );
+      const role: Role | null = await this.roleRepository.findByName(roleName);
+
+      if (!role) {
+        statusCode.value = 404;
+        throw new Error(`Role ${roleName} not found`);
+      }
+      role.name = newName;
+
+      if (role.id !== undefined) {
+        const updatedRole = await this.roleRepository.update(role.id, role);
+        if (!updatedRole) {
+          statusCode.value = 500;
+          throw new Error(`Role ${roleName} couldn't be updated`);
+        }
+        return updatedRole;
+      } else {
+        throw new Error("Role ID is undefined");
+      }
+    } catch (error) {
+      if (error instanceof RepositoryLayerError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleError(
+          "updating role name",
+          "updateRoleName()",
+          error,
+          statusCode.value,
+          ErrorLayer.SERVICE,
+          this.constructor.name
+        );
+      }
+      throw error;
+    }
+  }
+
+  async getAllRoles(
+    authenticatedUser: AuthenticatedUser,
+    relations: RoleRelations[] = []
+  ): Promise<Role[]> {
+    const statusCode: { value: number } = { value: 500 };
+    try {
+      this.checkAuthorization(
+        authenticatedUser,
+        Permissions.READ_ROLE,
+        statusCode
+      );
+      return await this.roleRepository.findAll(relations);
+    } catch (error) {
+      if (error instanceof RepositoryLayerError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleError(
+          "fetching all roles",
+          "getAllRoles()",
+          error,
+          statusCode.value,
+          ErrorLayer.SERVICE,
+          this.constructor.name
+        );
+      }
+      throw error;
+    }
+  }
+
+  async getRoleByName(
+    authenticatedUser: AuthenticatedUser,
+    roleName: string,
+    relations: RoleRelations[] = []
+  ): Promise<Role | null> {
+    const statusCode: { value: number } = { value: 500 };
+    try {
+      this.checkAuthorization(
+        authenticatedUser,
+        Permissions.READ_ROLE,
+        statusCode
+      );
+      return await this.roleRepository.findByName(roleName, relations);
+    } catch (error) {
+      if (error instanceof RepositoryLayerError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleError(
+          "fetching role by name",
+          "getRoleByName()",
+          error,
+          statusCode.value,
+          ErrorLayer.SERVICE,
+          this.constructor.name
+        );
+      }
+      throw error;
+    }
+  }
+
+  async deleteRole(
+    authenticatedUser: AuthenticatedUser,
+    roleName: string
+  ): Promise<void> {
+    const statusCode: { value: number } = { value: 500 };
+    try {
+      this.checkAuthorization(
+        authenticatedUser,
+        Permissions.DELETE_ROLE,
+        statusCode
+      );
+      const role: Role | null = await this.roleRepository.findByName(roleName);
+      if (!role) {
+        statusCode.value = 404;
+        throw new Error(`Role ${roleName} not found`);
+      }
+      if (role.id !== undefined) {
+        await this.roleRepository.delete(role.id);
+      } else {
+        throw new Error("Role ID is undefined");
+      }
+    } catch (error) {
+      if (error instanceof RepositoryLayerError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleError(
+          "deleting role",
+          "deleteRole()",
           error,
           statusCode.value,
           ErrorLayer.SERVICE,

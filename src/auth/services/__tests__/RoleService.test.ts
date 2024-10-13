@@ -29,7 +29,12 @@ describe("RoleService", () => {
       id: 1,
       username: "testUser1",
       role: "Admin",
-      permissions: [Permissions.CREATE_ROLE, Permissions.UPDATE_ROLE],
+      permissions: [
+        Permissions.CREATE_ROLE,
+        Permissions.READ_ROLE,
+        Permissions.UPDATE_ROLE,
+        Permissions.DELETE_ROLE,
+      ],
     };
 
     await permissionRepository.create(new Permission(Permissions.CREATE_ROLE));
@@ -100,82 +105,169 @@ describe("RoleService", () => {
     });
   });
 
-  describe("assignPermissionsToRole", () => {
-    it("should assign existing permissions to an existing role successfully", async () => {
-      const roleName: string = "New Role to update";
-      const permissionsNamesToAssign: Permissions[] = [
-        Permissions.CREATE_ROLE,
-        Permissions.READ_ROLE,
-      ];
+  describe("update", () => {
+    describe("updateRolePermissions", () => {
+      it("should update an existing role with new permissions successfully and not throw errors", async () => {
+        const roleName: string = "Role to update";
+        const initialPermissions: Permissions[] = [Permissions.UPDATE_ROLE];
+        const newPermissions: Permissions[] = [
+          Permissions.CREATE_ROLE,
+          Permissions.READ_ROLE,
+        ];
 
-      await service.createRole(authenticatedUser, roleName, [
-        Permissions.UPDATE_ROLE,
-      ]);
-      const updatedRole = await service.assignPermissionsToRole(
-        authenticatedUser,
-        roleName,
-        permissionsNamesToAssign
-      );
-
-      expect(updatedRole.permissions?.length).toBe(2);
-      expect(
-        updatedRole.permissions?.some(
-          (p) => p.description === Permissions.CREATE_ROLE
-        )
-      ).toBe(true);
-      expect(
-        updatedRole.permissions?.some(
-          (p) => p.description === Permissions.READ_ROLE
-        )
-      ).toBe(true);
-    });
-
-    it("should not throw an error when assigning existing permissions to an existing role", async () => {
-      const roleName: string = "Existing Role";
-      const permissionsNames: Permissions[] = [
-        Permissions.CREATE_ROLE,
-        Permissions.READ_ROLE,
-      ];
-
-      await service.createRole(authenticatedUser, roleName);
-
-      await expect(
-        service.assignPermissionsToRole(
+        await service.createRole(
           authenticatedUser,
           roleName,
-          permissionsNames
-        )
-      ).resolves.not.toThrow();
-    });
-
-    it("should throw an error if the user does not have the UPDATE_ROLE permission", async () => {
-      const roleName: string = "Role without update permission";
-      const permissionsNames: Permissions[] = [
-        Permissions.CREATE_ROLE,
-        Permissions.READ_ROLE,
-      ];
-
-      authenticatedUser.permissions = authenticatedUser.permissions.filter(
-        (permission) => permission !== Permissions.UPDATE_ROLE
-      );
-      await service.createRole(authenticatedUser, roleName);
-
-      let err: ServiceLayerError | null = null;
-
-      try {
-        await service.assignPermissionsToRole(
-          authenticatedUser,
-          roleName,
-          permissionsNames
+          initialPermissions
         );
-      } catch (error) {
-        err = error as ServiceLayerError;
-      }
-      expect(err).toBeInstanceOf(ServiceLayerError);
-      expect((err as ServiceLayerError).internalMessage).toBe(
-        "Authorization error\n update:role isn't in user permissions. User permissions: create:role"
-      );
-      expect((err as ServiceLayerError).statusCode).toBe(403);
+
+        const updatedRole = await service.updateRolePermissions(
+          authenticatedUser,
+          roleName,
+          newPermissions
+        );
+
+        expect(updatedRole.permissions?.length).toBe(2);
+        expect(
+          updatedRole.permissions?.some(
+            (p) => p.description === Permissions.CREATE_ROLE
+          )
+        ).toBe(true);
+        expect(
+          updatedRole.permissions?.some(
+            (p) => p.description === Permissions.READ_ROLE
+          )
+        ).toBe(true);
+
+        await expect(
+          service.updateRolePermissions(
+            authenticatedUser,
+            roleName,
+            newPermissions
+          )
+        ).resolves.not.toThrow();
+      });
+      it("should throw an error if the role doesn't exist", async () => {
+        let err: ServiceLayerError | null = null;
+        try {
+          await service.updateRolePermissions(
+            authenticatedUser,
+            "Non-existent Role",
+            []
+          );
+        } catch (error) {
+          err = error as ServiceLayerError;
+        }
+        expect(err).toBeInstanceOf(ServiceLayerError);
+        expect(err?.internalMessage).toBe("Role Non-existent Role not found");
+        expect(err?.statusCode).toBe(404);
+      });
+      it("should throw an error if the user is not authorized", async () => {
+        authenticatedUser.permissions = [];
+        let err: ServiceLayerError | null = null;
+        try {
+          await service.updateRolePermissions(
+            authenticatedUser,
+            "Role to update",
+            []
+          );
+        } catch (error) {
+          err = error as ServiceLayerError;
+        }
+        expect(err).toBeInstanceOf(ServiceLayerError);
+        expect(err?.internalMessage).toBe(
+          "Authorization error\n update:role isn't in user permissions. User permissions: empty"
+        );
+        expect(err?.statusCode).toBe(403);
+      });
+      it("should throw an error if the new permissions are not valid", async () => {
+        const roleName: string = "Role to update";
+        const initialPermissions: Permissions[] = [Permissions.UPDATE_ROLE];
+        const newPermissions: Permissions[] = [
+          "Invalid Permission" as Permissions,
+        ];
+        let err: ServiceLayerError | null = null;
+
+        await service.createRole(
+          authenticatedUser,
+          roleName,
+          initialPermissions
+        );
+        try {
+          await service.updateRolePermissions(
+            authenticatedUser,
+            roleName,
+            newPermissions
+          );
+        } catch (error) {
+          err = error as ServiceLayerError;
+        }
+        expect(err).toBeInstanceOf(ServiceLayerError);
+        expect(err?.internalMessage).toBe(
+          "Permission Invalid Permission not found"
+        );
+        expect(err?.statusCode).toBe(404);
+      });
+    });
+
+    describe("updateRoleName", () => {
+      it("should update the role name successfully and not throw errors", async () => {
+        const roleName: string = "Role to update";
+        const newName: string = "Updated Role";
+        await service.createRole(authenticatedUser, roleName);
+
+        const updatedRole = await service.updateRoleName(
+          authenticatedUser,
+          roleName,
+          newName
+        );
+        expect(updatedRole.name).toBe(newName);
+      });
+    });
+  });
+
+  describe("read", () => {
+    describe("getAllRoles", () => {
+      beforeEach(async () => {
+        await service.createRole(authenticatedUser, "Role 1");
+        await service.createRole(authenticatedUser, "Role 2");
+        const permissions: Permission[] = await permissionRepository.findAll();
+
+        await service.updateRolePermissions(authenticatedUser, "Role 1", [
+          permissions[0].description as Permissions,
+          permissions[1].description as Permissions,
+        ]);
+        await service.updateRolePermissions(authenticatedUser, "Role 2", [
+          permissions[2].description as Permissions,
+          permissions[3].description as Permissions,
+        ]);
+      });
+
+      it("should return all roles successfully and not throw errors", async () => {
+        const roles: Role[] = await service.getAllRoles(authenticatedUser);
+        expect(roles.length).toBe(2);
+      });
+
+      it("should return all roles with relations successfully and not throw errors", async () => {
+        const roles: Role[] = await service.getAllRoles(authenticatedUser, [
+          "permissions",
+        ]);
+
+        expect(roles.length).toBe(2);
+        expect(roles[0].permissions?.length).toBe(2);
+        expect(roles[1].permissions?.length).toBe(2);
+      });
+    });
+  });
+
+  describe("delete", () => {
+    it("should delete a role successfully and not throw errors", async () => {
+      await service.createRole(authenticatedUser, "Role to delete");
+      const rolesBefore: Role[] = await repository.findAll();
+      await service.deleteRole(authenticatedUser, "Role to delete");
+      const rolesAfter: Role[] = await repository.findAll();
+      expect(rolesAfter.length).toBe(0);
+      expect(rolesBefore.length).toBe(1);
     });
   });
 });
