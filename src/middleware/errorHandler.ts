@@ -1,17 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import { RepositoryError } from "../errors/AppError";
+import { AppError } from "../errors/AppError";
 
 export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ): void => {
-  if (error instanceof RepositoryError) {
-    //TODO
+  let statusCode = 500;
+  let publicMessage = "An unknown error occurred";
+
+  if (error instanceof AppError) {
+    statusCode = error.statusCode;
+    publicMessage = error.publicMessage;
+  } else if (error instanceof Error) {
+    publicMessage = error.message;
   }
 
-  console.error(error);
-  res.status(500).json({ error: "An unexpected error occurred" });
-  next();
+  res.status(statusCode).json({ error: publicMessage });
 };

@@ -1,5 +1,6 @@
-import { ErrorLayer } from "../errors/AppError";
-import { RepositoryLayerError, ServiceLayerError } from "../errors/AppError";
+import { NextFunction } from "express";
+import { AppError, ErrorLayer } from "../errors/AppError";
+import logger from "./logger";
 
 export function handleError(
   operation: string,
@@ -7,34 +8,31 @@ export function handleError(
   error: unknown,
   statusCode: number = 500,
   layer: ErrorLayer,
-  className: string
+  className: string,
+  options?: {
+    publicMessage?: string;
+    next?: NextFunction;
+  }
 ): never {
   if (error instanceof Error) {
     //Logging
-    console.error(
+    logger.error(
       `App Error:\nLayer:${layer}\nClass:${className}\nMethod:${method}\nOriginal error:${error}`
     );
-    //Creating public message
-    const publicMessage = `Error occurred while ${operation}`;
-    //Create and throw specific error
-    if (layer === ErrorLayer.REPOSITORY) {
-      throw new RepositoryLayerError(
-        operation,
-        method,
-        error.message,
-        statusCode,
-        publicMessage
-      );
-    }
 
-    if (layer === ErrorLayer.SERVICE) {
-      throw new ServiceLayerError(
-        operation,
-        method,
-        error.message,
-        statusCode,
-        publicMessage
-      );
+    const newError = new AppError(
+      operation,
+      method,
+      error.message,
+      statusCode,
+      options?.publicMessage ?? `Error occurred while ${operation}`,
+      layer
+    );
+
+    if (layer === ErrorLayer.ROUTE && options?.next) {
+      options.next(newError);
+    } else {
+      throw newError;
     }
   }
 

@@ -45,21 +45,17 @@ describe("PermissionRepository", () => {
 
   describe("Relationship between Role and Permission", () => {
     it("should create a role with permissions and verify the relationship", async () => {
-      //Crear un Rol Mock
       const mockRole = new Role("Admin");
       await roleRepository.save(mockRole);
 
-      //Asignar permisos al Rol
       mockRole.setPermissions(mockPermissions);
       await roleRepository.save(mockRole);
 
-      //Verificar la relación desde el lado del Permiso
       const savedPermissions = await repository.findAll(["roles"]);
       savedPermissions.forEach((permission) => {
         expect(permission.roles).toContainEqual({ id: 1, name: "Admin" });
       });
 
-      //Verificar la relacion desde el lado del Rol
       const savedRole: Role | null = await roleRepository.findOne({
         where: { id: mockRole.id },
         relations: ["permissions"],

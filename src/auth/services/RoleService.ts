@@ -7,6 +7,7 @@ import { Permission } from "../entities/Permission";
 import { ErrorLayer, RepositoryLayerError } from "../../errors/AppError";
 import { handleError } from "../../utils/errorHandlerUtil";
 import { RoleRelations } from "../repositories/RoleRepository";
+import { checkAuthorization } from "../../utils/serviceUtils";
 
 export class RoleService {
   private roleRepository: RoleRepository;
@@ -20,25 +21,7 @@ export class RoleService {
     this.permissionRepository = permissionRepository;
   }
 
-  //Utility methods
-  //method to check if the authenticated user has the required permission
-  private checkAuthorization(
-    authenticatedUser: AuthenticatedUser,
-    permission: Permissions,
-    statusCode: { value: number }
-  ): boolean {
-    const authorized: boolean =
-      authenticatedUser.permissions.includes(permission);
-    if (!authorized) {
-      statusCode.value = 403;
-      throw new Error(
-        `Authorization error\n ${permission} isn't in user permissions. User permissions: ${authenticatedUser.permissions.length ? authenticatedUser.permissions.join(", ") : "empty"}`
-      );
-    }
-    return true;
-  }
-  //method to resolve permissions from names to objects
-  private async resolvePermissions(
+  async resolvePermissions(
     permissionsNames: Permissions[],
     statusCode: { value: number }
   ): Promise<Permission[]> {
@@ -62,7 +45,7 @@ export class RoleService {
   ): Promise<Role> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
+      checkAuthorization(
         authenticatedUser,
         Permissions.CREATE_ROLE,
         statusCode
@@ -113,7 +96,7 @@ export class RoleService {
   ): Promise<Role> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
+      checkAuthorization(
         authenticatedUser,
         Permissions.UPDATE_ROLE,
         statusCode
@@ -165,7 +148,7 @@ export class RoleService {
   ): Promise<Role> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
+      checkAuthorization(
         authenticatedUser,
         Permissions.UPDATE_ROLE,
         statusCode
@@ -212,11 +195,7 @@ export class RoleService {
   ): Promise<Role[]> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
-        authenticatedUser,
-        Permissions.READ_ROLE,
-        statusCode
-      );
+      checkAuthorization(authenticatedUser, Permissions.READ_ROLE, statusCode);
       return await this.roleRepository.findAll(relations);
     } catch (error) {
       if (error instanceof RepositoryLayerError) {
@@ -243,11 +222,7 @@ export class RoleService {
   ): Promise<Role | null> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
-        authenticatedUser,
-        Permissions.READ_ROLE,
-        statusCode
-      );
+      checkAuthorization(authenticatedUser, Permissions.READ_ROLE, statusCode);
       return await this.roleRepository.findByName(roleName, relations);
     } catch (error) {
       if (error instanceof RepositoryLayerError) {
@@ -273,7 +248,7 @@ export class RoleService {
   ): Promise<void> {
     const statusCode: { value: number } = { value: 500 };
     try {
-      this.checkAuthorization(
+      checkAuthorization(
         authenticatedUser,
         Permissions.DELETE_ROLE,
         statusCode

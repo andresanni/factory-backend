@@ -1,34 +1,41 @@
 import "express-async-errors";
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
-import morgan from "morgan";
 import "reflect-metadata";
-import { appDataSource } from "./config/data-source";
 import { authDataSource } from "./config/data-source";
-import supplyRouter from "./business/routes/SupplyRoutes";
 import { errorHandler } from "./middleware/errorHandler";
-import userRoute from "./auth/routes/userRoutes";
+import authRoutes from "./auth/routes/authRutes";
+import userRoutes from "./auth/routes/userRoutes";
+import morganMiddleware from "./middleware/morganMiddleware";
+import logger from "./utils/logger";
+//import { insertInitialData } from "./utils/initialData";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(morgan("dev"));
+app.use(cors());
+app.use(morganMiddleware);
 app.use(express.json());
 
-app.use("/api/supplies", supplyRouter);
-app.use("/api/users", userRoute);
-
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use(errorHandler);
 
-Promise.all([appDataSource.initialize(), authDataSource.initialize()])
+authDataSource
+  .initialize()
   .then(() => {
-    console.log("Conected to databases");
+    logger.info("Conected to database");
     app.listen(PORT, () => {
-      console.log(`Server running at port ${PORT}`);
+      logger.info(`Server running at port ${PORT}`, {
+        operation: "server",
+        method: "listen",
+      });
     });
+    //insertInitialData();
   })
   .catch((error) => {
-    console.log("Error connecting to database", error);
+    logger.error("Error connecting to database", error);
   });

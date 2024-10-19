@@ -9,8 +9,8 @@ export enum Permissions {
   UPDATE_ROLE = "update:role",
   DELETE_ROLE = "delete:role",
 
-  CREATE_SUPPLY = "create:supply",
-  READ_SUPPLY = "read:supply",
-  UPDATE_SUPPLY = "update:supply",
-  DELETE_SUPPLY = "delete:supply",
+  CREATE_PERMISSION = "create:permission",
+  READ_PERMISSION = "read:permission",
+  UPDATE_PERMISSION = "update:permission",
+  DELETE_PERMISSION = "delete:permission",
 }

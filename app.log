@@ -1,0 +1,54 @@
+{
+  message: 'This is an info message',
+  level: 'info',
+  timestamp: '2024-10-16T11:50:24.558Z'
+}
+{
+  message: 'This is an error message',
+  level: 'error',
+  timestamp: '2024-10-16T11:50:24.566Z'
+}
+{
+  message: 'This is a debug message',
+  level: 'debug',
+  timestamp: '2024-10-16T11:50:24.567Z'
+}
+{
+  message: 'This is a warn message',
+  level: 'warn',
+  timestamp: '2024-10-16T11:50:24.568Z'
+}
+{
+  operation: 'test',
+  method: 'test',
+  error: Error: This is a test error
+      at Object.<anonymous> (D:\Proyectos\factory-backend\testLogger.ts:11:10)
+      at Module._compile (node:internal/modules/cjs/loader:1469:14)
+      at Module.m._compile (D:\Proyectos\factory-backend\node_modules\ts-node\src\index.ts:1618:23)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)
+      at Object.require.extensions.<computed> [as .ts] (D:\Proyectos\factory-backend\node_modules\ts-node\src\index.ts:1621:12)
+      at Module.load (node:internal/modules/cjs/loader:1288:32)
+      at Function.Module._load (node:internal/modules/cjs/loader:1104:12)
+      at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)
+      at phase4 (D:\Proyectos\factory-backend\node_modules\ts-node\src\bin.ts:649:14)
+      at bootstrap (D:\Proyectos\factory-backend\node_modules\ts-node\src\bin.ts:95:10),
+  level: 'info',
+  message: 'This is an info message',
+  timestamp: '2024-10-16T11:50:24.569Z'
+}
+{
+  level: 'error',
+  message: 'This is a test error error message',
+  stack: 'Error: error message\n' +
+    '    at Object.<anonymous> (D:\\Proyectos\\factory-backend\\testLogger.ts:14:38)\n' +
+    '    at Module._compile (node:internal/modules/cjs/loader:1469:14)\n' +
+    '    at Module.m._compile (D:\\Proyectos\\factory-backend\\node_modules\\ts-node\\src\\index.ts:1618:23)\n' +
+    '    at Module._extensions..js (node:internal/modules/cjs/loader:1548:10)\n' +
+    '    at Object.require.extensions.<computed> [as .ts] (D:\\Proyectos\\factory-backend\\node_modules\\ts-node\\src\\index.ts:1621:12)\n' +
+    '    at Module.load (node:internal/modules/cjs/loader:1288:32)\n' +
+    '    at Function.Module._load (node:internal/modules/cjs/loader:1104:12)\n' +
+    '    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n' +
+    '    at phase4 (D:\\Proyectos\\factory-backend\\node_modules\\ts-node\\src\\bin.ts:649:14)\n' +
+    '    at bootstrap (D:\\Proyectos\\factory-backend\\node_modules\\ts-node\\src\\bin.ts:95:10)',
+  timestamp: '2024-10-16T11:50:24.593Z'
+}

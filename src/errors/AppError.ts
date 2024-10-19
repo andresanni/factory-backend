@@ -1,6 +1,8 @@
 export enum ErrorLayer {
   SERVICE = "service",
   REPOSITORY = "repository",
+  ROUTE = "route",
+  CONTROLLER = "controller",
 }
 
 export class AppError extends Error {
@@ -14,43 +16,5 @@ export class AppError extends Error {
   ) {
     super(internalMessage);
     this.name = this.constructor.name;
-  }
-}
-
-export class RepositoryLayerError extends AppError {
-  constructor(
-    operation: string,
-    method: string,
-    internalMessage: string,
-    statusCode: number = 500,
-    publicMessage: string = `Error ocurred while performing ${operation}`
-  ) {
-    super(
-      operation,
-      method,
-      internalMessage,
-      statusCode,
-      publicMessage,
-      ErrorLayer.REPOSITORY
-    );
-  }
-}
-
-export class ServiceLayerError extends AppError {
-  constructor(
-    operation: string,
-    method: string,
-    internalMessage: string,
-    statusCode: number = 500,
-    publicMessage: string = `Error ocurred while performing ${operation}`
-  ) {
-    super(
-      operation,
-      method,
-      internalMessage,
-      statusCode,
-      publicMessage,
-      ErrorLayer.SERVICE
-    );
   }
 }
